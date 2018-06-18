@@ -35,7 +35,11 @@ public class Parser {
     private List<String> fromInfixToPostfix(List<String> tokens) {
         Stack<String> stack = new Stack<>();
         List<String> out = new Stack<>();
-        for (String token : tokens) {
+        for (int i = 0; i < tokens.size(); i++) {
+            String token = tokens.get(i);
+            String procedingToken = i !=0 ? tokens.get(i - 1) : null;
+            String nextToken = i != tokens.size() - 1 ? tokens.get(i + 1) : null;
+
             if (isOperator(token)) {
                 Operator operator = operatorOf(token);
                 if (!stack.isEmpty() && isOperator(stack.peek()) && operator.priority <= operatorOf(stack.peek()).priority) {
@@ -47,6 +51,11 @@ public class Parser {
             } else if (isNumeric(token)) {
                 out.add(token);
             } else if (token.equals("(")) {
+                if (i != 0) {
+                    if(Parser.isNumeric(procedingToken) || procedingToken.equals(")")) {
+                        stack.push(Operator.MULTIPLICATION.symbol);
+                    }
+                }
                 stack.push(token);
             } else if (token.equals(")")) {
                 while (!stack.isEmpty() && !stack.peek().equals("(")) {
@@ -54,6 +63,11 @@ public class Parser {
                 }
                 if (!stack.isEmpty()) {
                     stack.pop();
+                }
+                if (i != tokens.size() - 1) {
+                    if (Parser.isNumeric(nextToken)) {
+                        stack.push( Operator.MULTIPLICATION.symbol);
+                    }
                 }
             }
         }

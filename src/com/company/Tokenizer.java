@@ -19,8 +19,9 @@ public class Tokenizer {
             tokens.add(matcher.group(1));
         }
         zipOperators(tokens);
-        addImplicitMultipilication(tokens);
+        //addImplicitMultipilication(tokens);
         validate(tokens);
+        if (tokens.size() == 0) throw new InvalidInputException();
         return tokens;
     }
 
@@ -58,7 +59,7 @@ public class Tokenizer {
         for (int i = 0; i < tokens.size(); i++) {
             String token = tokens.get(i);
             if (token.equals(Operator.SUBTRACTION.symbol)) {
-                if (i == 0 || Parser.isOperator(tokens.get(i - 1))) {
+                if (i == 0 || Parser.isOperator(tokens.get(i - 1) ) || tokens.get(i - 1).equals("(")) {
                     String nextToken = tokens.get(i + 1);
                     nextToken = "-" + nextToken;
                     tokens.set(i + 1, nextToken);

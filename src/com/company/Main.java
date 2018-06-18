@@ -14,9 +14,15 @@ public class Main {
             if (input.equals("q")) {
                 break;
             }
-            Parser parser = new Parser(input);
-            parser.process();
-            System.out.println(parser.getPostfix());
+            try {
+                Parser parser = new Parser(input);
+                parser.process();
+                System.out.println(parser.getPostfix());
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Błąd!");
+            }
         }
     }
+
 }
